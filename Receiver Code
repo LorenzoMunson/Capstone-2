@@ -1,0 +1,71 @@
+#define datain A0
+
+#include <SoftwareSerial.h>
+#include <SimpleDHT.h>
+int pinDHT22 = 2;
+
+SimpleDHT22 dht22;
+SoftwareSerial BTserial(19,18);
+
+int mq2Value, mq4Value, mq7Value, mq135Value;
+int mq2PIN = 0, mq4PIN = 1, mq7PIN = 2, mq135PIN = 3;
+
+void setup() 
+{
+  Serial.begin(115200); 
+          
+  pinMode(mq2PIN, INPUT);
+  pinMode(mq4PIN, INPUT);
+  pinMode(mq7PIN, INPUT);
+  pinMode(mq135PIN, INPUT);
+  Serial.print("Sensor warming up...");
+  delay(20000);
+}
+
+void loop() 
+{
+  // Adafruit Sensor
+  BTserial.print("No Readings");
+  BTserial.print("|");
+  
+  // MQ2 SENSOR *****DO NOT EDIT*****
+  mq2Value = analogRead(mq2PIN);
+  if (mq2Value > 500)
+  {
+    Serial.print("Smoke Detected!");
+  }
+  
+  // MQ4 SENSOR                     *****DO NOT EDIT*****
+  mq4Value = analogRead(mq4PIN);
+  if (mq4Value > 250)
+  {
+    Serial.print("Methane Detected!");
+  }
+
+  // MQ7 SENSOR                     *****DO NOT EDIT*****
+  mq7Value = analogRead(mq7PIN);
+  if (mq7Value > 500)
+  {
+    Serial.print("Carbon Monoxide Detected!");
+  }
+
+  // MQ135 SENSOR                   *****DO NOT EDIT*****
+  mq135Value = analogRead(mq135PIN);
+  if (mq135Value > 500)
+  {
+    Serial.print("Carbon Dioxide Detected!");
+  }
+  
+  //DHT22 Sensor                    *****DO NOT EDIT*****
+  byte temperature = 0;
+  byte humidity = 0;
+  if (dht22.read(pinDHT22, &temperature, &humidity, NULL))
+  {
+    return;
+  }
+  Serial.print((int)humidity); 
+  Serial.print(" %");
+  Serial.print((int)temperature);
+  Serial.print(" °C");
+  delay(5000);
+}
